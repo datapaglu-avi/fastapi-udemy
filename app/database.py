@@ -1,12 +1,13 @@
 import sqlite3
 from typing import Any
 from .schemas import ShipmentCreate, ShipmentUpdate
+from contextlib import contextmanager
 
 class Database:
-    def __init__(self):
+    def connect_to_db(self):
         self.con = sqlite3.connect('sqlite.db', check_same_thread=False)
         self.cursor = self.con.cursor()
-        self.create_table()
+
 
     def create_table(self):
         # # 1. Create a table
@@ -83,3 +84,35 @@ class Database:
 
     def close(self):
         self.con.close()
+
+    # to create context manager
+    # either this or Usage - function based
+    # def __enter__(self):
+    #     self.connect_to_db()
+    #     self.create_table()
+
+    #     return self
+    
+
+    # def __exit__(self, *args):
+    #     self.close()
+
+## usage
+# with Database() as db:
+#     x = db.get(12701)
+#     print(x) # {'id': 12701, 'content': 'tree', 'weight': 19.0, 'status': 'out_for_delivery'}
+
+# Usage - function based | in case we are not able to add __enter__ and __exit__ function to db class
+@contextmanager
+def managed_db():
+    db = Database()
+    # setup
+    db.connect_to_db()
+    db.create_table()
+
+    yield db
+    # Dispose
+    db.close()
+
+with managed_db() as db:
+    print(db.get(12701))
