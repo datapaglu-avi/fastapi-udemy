@@ -11,7 +11,7 @@ engine = create_async_engine(
 
 async def create_db_tables():
     async with engine.begin() as connection:
-        from app.database.models import Shipment   
+        from app.database.models import Shipment  # noqa: F401 | it imports the model so that it's registered in the metadata.
         await connection.run_sync(SQLModel.metadata.create_all)
 
 

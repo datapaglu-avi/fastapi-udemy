@@ -28,8 +28,6 @@ async def submit_shipment(shipment: ShipmentCreate, service: ServiceDep) -> Ship
 ### Update fields of a shipment
 @router.patch("/", response_model=ShipmentRead)
 async def update_shipment(id: int, shipment_update: ShipmentUpdate, service: ServiceDep):
-    # shipment = db.update(id, shipment)
-
     update = shipment_update.model_dump(exclude_none=True)
 
     if not update:
