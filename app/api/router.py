@@ -4,10 +4,10 @@ from app.api.dependencies import ServiceDep
 from app.api.schemas.shipment import ShipmentCreate, ShipmentRead, ShipmentUpdate
 from app.database.models import Shipment
 
-router = APIRouter()
+router = APIRouter(prefix='/shipment', tags=['Shipment'])
 
 ###  a shipment by id
-@router.get("/shipment", response_model=ShipmentRead)
+@router.get("/", response_model=ShipmentRead)
 async def get_shipment(id: int, service: ServiceDep):
     shipment = await service.get(id)
     if shipment is None:
@@ -20,13 +20,13 @@ async def get_shipment(id: int, service: ServiceDep):
 
 
 ### Create a new shipment with content and weight
-@router.post("/shipment")
+@router.post("/")
 async def submit_shipment(shipment: ShipmentCreate, service: ServiceDep) -> Shipment:
     return await service.add(shipment)
 
 
 ### Update fields of a shipment
-@router.patch("/shipment", response_model=ShipmentRead)
+@router.patch("/", response_model=ShipmentRead)
 async def update_shipment(id: int, shipment_update: ShipmentUpdate, service: ServiceDep):
     # shipment = db.update(id, shipment)
 
@@ -44,7 +44,7 @@ async def update_shipment(id: int, shipment_update: ShipmentUpdate, service: Ser
 
 
 ### Delete a shipment by id
-@router.delete("/shipment")
+@router.delete("/")
 async def delete_shipment(id: int, service: ServiceDep) -> dict[str, str]:
 
     await service.delete(id)

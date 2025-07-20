@@ -25,7 +25,7 @@ class ShipmentService:
         return new_shipment
 
     async def update(self, id: int, shipment_update: ShipmentUpdate) -> Shipment:
-        shipment = await self.get(Shipment, id)
+        shipment = await self.get(id)
         shipment.sqlmodel_update(shipment_update)
 
         self.session.add(shipment)
@@ -35,5 +35,5 @@ class ShipmentService:
         return shipment
 
     async def delete(self, id: int) -> None:
-        await self.session.delete(await self.get(Shipment, id))
+        await self.session.delete(await self.get(id))
         await self.session.commit()
